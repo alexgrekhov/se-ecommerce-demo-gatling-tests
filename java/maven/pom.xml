@@ -1,21 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>example</groupId>
   <artifactId>gatling-ecomm-maven-java</artifactId>
-  <version>3.14.9</version>
+  <version>1.0.0</version>
 
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gatling.version>${project.version}</gatling.version>
+
+    <!-- версии -->
+    <gatling.version>3.14.9</gatling.version>
     <gatling-maven-plugin.version>4.21.0</gatling-maven-plugin.version>
-    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-    <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
-    <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
-    <spotless-maven-plugin.version>3.2.1</spotless-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -29,55 +28,63 @@
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>${maven-resources-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${maven-jar-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless-maven-plugin.version}</version>
-        <configuration>
-          <java>
-            <includes>
-              <include>**/*.java</include>
-            </includes>
-            <googleJavaFormat />
-          </java>
-        </configuration>
-        <executions>
-          <execution>
-            <id>spotless-apply</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>apply</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>spotless-verify</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+
+      <!-- Gatling plugin -->
       <plugin>
         <groupId>io.gatling</groupId>
         <artifactId>gatling-maven-plugin</artifactId>
         <version>${gatling-maven-plugin.version}</version>
         <configuration>
-          <!-- Enterprise Cloud (https://cloud.gatling.io/) configuration reference: https://docs.gatling.io/reference/integrations/build-tools/maven-plugin/#running-your-simulations-on-gatling-enterprise-cloud -->
+          <jvmArgs>
+            <jvmArg>-DTEST_TYPE=${TEST_TYPE}</jvmArg>
+            <jvmArg>-DDURATION=${DURATION}</jvmArg>
+            <jvmArg>-DDOMAIN=${DOMAIN}</jvmArg>
+          </jvmArgs>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
+
+  <!-- 🔥 ПРОФИЛИ НАГРУЗКИ -->
+  <profiles>
+
+    <profile>
+      <id>instant</id>
+      <properties>
+        <TEST_TYPE>INSTANT_USERS</TEST_TYPE>
+        <DURATION>60</DURATION>
+        <DOMAIN>acetoys.uk</DOMAIN>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>ramp</id>
+      <properties>
+        <TEST_TYPE>RAMP_USERS</TEST_TYPE>
+        <DURATION>120</DURATION>
+        <DOMAIN>acetoys.uk</DOMAIN>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>complex</id>
+      <properties>
+        <TEST_TYPE>COMPLEX_INJECTION</TEST_TYPE>
+        <DURATION>180</DURATION>
+        <DOMAIN>acetoys.uk</DOMAIN>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>closed</id>
+      <properties>
+        <TEST_TYPE>CLOSED_MODEL</TEST_TYPE>
+        <DURATION>120</DURATION>
+        <DOMAIN>acetoys.uk</DOMAIN>
+      </properties>
+    </profile>
+
+  </profiles>
+
 </project>
