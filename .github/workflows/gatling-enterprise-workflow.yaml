@@ -1,38 +1,36 @@
 name: Gatling Enterprise CI/CD
 
 on:
-  workflow_dispatch:   # ручной запуск
   push:
     branches:
       - main
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   gatling:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      # Забираем код
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # Устанавливаем JDK 21
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
-      # Сборка Maven
       - name: Build with Maven
         run: mvn clean compile
+        working-directory: java/maven
 
-      # Запуск Gatling тестов
-      - name: Run Gatling Tests
-        run: ./run-all.sh
+      - name: Run Gatling simulations
+        run: mvn gatling:test
+        working-directory: java/maven
 
-      # Сохраняем отчёты как артефакты
-      - name: Archive Gatling Reports
+      - name: Upload Gatling reports
         uses: actions/upload-artifact@v4
         with:
           name: gatling-reports
-          path: target/gatling-reports/**git add .github/workflows/gatling-enterprise-workflow.yaml
+          path: java/maven/target/gatling
