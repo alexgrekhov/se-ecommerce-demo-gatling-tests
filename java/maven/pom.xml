@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -12,32 +13,24 @@
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- версии -->
+    <!-- версии Gatling -->
     <gatling.version>3.14.9</gatling.version>
     <gatling-maven-plugin.version>4.21.0</gatling-maven-plugin.version>
   </properties>
 
   <dependencies>
-
+    <!-- Основные Gatling charts -->
     <dependency>
       <groupId>io.gatling.highcharts</groupId>
       <artifactId>gatling-charts-highcharts</artifactId>
       <version>${gatling.version}</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>io.gatling</groupId>
-      <artifactId>gatling-metrics-influxdb</artifactId>
-      <version>${gatling.version}</version>
-    </dependency>
-
   </dependencies>
 
   <build>
     <plugins>
-
-      <!-- Gatling plugin -->
+      <!-- Gatling Maven plugin -->
       <plugin>
         <groupId>io.gatling</groupId>
         <artifactId>gatling-maven-plugin</artifactId>
@@ -50,13 +43,11 @@
           </jvmArgs>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
   <!-- 🔥 ПРОФИЛИ НАГРУЗКИ -->
   <profiles>
-
     <profile>
       <id>instant</id>
       <properties>
@@ -92,7 +83,6 @@
         <DOMAIN>acetoys.uk</DOMAIN>
       </properties>
     </profile>
-
   </profiles>
 
 </project>
