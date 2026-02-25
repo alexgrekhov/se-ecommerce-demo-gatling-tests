@@ -18,12 +18,20 @@
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>io.gatling.highcharts</groupId>
       <artifactId>gatling-charts-highcharts</artifactId>
       <version>${gatling.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>io.gatling</groupId>
+      <artifactId>gatling-metrics-influxdb</artifactId>
+      <version>${gatling.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>

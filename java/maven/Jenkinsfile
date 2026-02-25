@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Run Gatling Tests') {
+            steps {
+                sh './run-all.sh'
+            }
+        }
+
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: 'target/gatling-reports/**', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Tests finished'
+        }
+    }
+}
