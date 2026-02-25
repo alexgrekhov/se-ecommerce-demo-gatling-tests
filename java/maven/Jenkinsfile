@@ -2,39 +2,51 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'
+        maven 'Maven' // Имя Maven в Jenkins Global Tool Configuration
+    }
+
+    environment {
+        PROJECT_DIR = 'java/maven'
+        RUN_ALL_SCRIPT = './run-all.sh'
+        GATLING_REPORTS_DIR = "${PROJECT_DIR}/target/gatling"
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-repo.git'
+                git 'https://github.com/alexgrekhov/se-ecommerce-demo-gatling-tests.git'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                dir("${PROJECT_DIR}") {
+                    sh 'mvn clean compile'
+                }
             }
         }
 
         stage('Run Gatling Tests') {
             steps {
-                sh './run-all.sh'
+                sh "${RUN_ALL_SCRIPT}"
             }
         }
 
         stage('Archive Reports') {
             steps {
-                archiveArtifacts artifacts: 'target/gatling-reports/**', fingerprint: true
+                // Берём все папки отчётов после run-all.sh и архивируем
+                archiveArtifacts artifacts: "${GATLING_REPORTS_DIR}/**", fingerprint: true
             }
         }
     }
 
     post {
         always {
-            echo 'Tests finished'
+            echo '✅ Gatling tests finished. Reports archived.'
+        }
+        failure {
+            echo '❌ Some Gatling tests failed!'
         }
     }
 }
