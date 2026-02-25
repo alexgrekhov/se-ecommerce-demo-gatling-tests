@@ -1,2 +1,21 @@
+name: Gatling Enterprise CI/CD
+
 on:
+  workflow_dispatch:    # ручной запуск через GitHub UI или CLI
+  push:
+    branches:
+      - main           # запуск при пуше в main
+  pull_request:         # запуск при открытии/обновлении PR
+
 jobs:
+  gatling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Gatling Tests
+        run: ./run-all.sh
+      - name: Archive Gatling Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: gatling-reports
+          path: target/gatling-reports/
