@@ -30,7 +30,7 @@ jobs:
         working-directory: java/maven
 
       - name: Upload Gatling reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gatling-reports
           path: java/maven/target/gatling
